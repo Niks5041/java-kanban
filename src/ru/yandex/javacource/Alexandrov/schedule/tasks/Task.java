@@ -1,28 +1,12 @@
-package ru.yandex.javacource.Alexandrov.schedule.tasks;
+package ru.yandex.javacource.alexandrov.schedule.tasks;
 
 import java.util.Objects;
 
 public class Task {
     private String name;
     private String description;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return taskId == task.taskId && Objects.equals(name, task.name) && Objects.equals(description, task.description)
-                && status == task.status;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description, taskId, status);
-    }
-
     private int taskId;
     private TaskStatus status;
-
     public Task(String name, String description, int taskId, TaskStatus status) {
         this.name = name;
         this.description = description;
@@ -58,12 +42,22 @@ public class Task {
         this.description = description;
     }
 
-    public int getTaskId() {
-        return taskId;
-    }
-
     public void setTaskId(int taskId) {
         this.taskId = taskId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return taskId == task.taskId && Objects.equals(name, task.name) && Objects.equals(description, task.description)
+                && status == task.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, taskId, status);
     }
 
     @Override

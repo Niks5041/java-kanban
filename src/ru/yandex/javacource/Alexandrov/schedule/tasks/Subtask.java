@@ -1,6 +1,5 @@
-package ru.yandex.javacource.Alexandrov.schedule.tasks;
+package ru.yandex.javacource.alexandrov.schedule.tasks;
 
-import java.util.ArrayList;
 public class Subtask extends Epic {
     private int epicId;
 
@@ -15,6 +14,10 @@ public class Subtask extends Epic {
 
     public void setEpicId(int epicId) {
         this.epicId = epicId;
+    }
+
+    public int setEpicIdTest(int epicId) {             //добавил для теста
+        return epicId;
     }
 }
 

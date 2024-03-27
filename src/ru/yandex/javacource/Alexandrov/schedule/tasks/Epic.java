@@ -1,4 +1,4 @@
-package ru.yandex.javacource.Alexandrov.schedule.tasks;
+package ru.yandex.javacource.alexandrov.schedule.tasks;
 
 import java.util.ArrayList;
 public class Epic extends Task {
@@ -15,6 +15,22 @@ public class Epic extends Task {
 
     public void setSubtaskIds(ArrayList<Integer> subtaskIds) {
         this.subtaskIds = subtaskIds;
+    }
+
+    public void cleanSubtaskIds() {
+        subtaskIds.clear();
+    }
+    public void removeSubtask(int id) {
+        subtaskIds.remove(Integer.valueOf(id));
+    }
+
+    public void addSubtaskId(int subtaskId) {
+       // return subtaskId;
+        subtaskIds.add(subtaskId);
+    }
+
+    public int addSubtaskIdTest(int subtaskId) {          //добавил для теста
+        return subtaskId;
     }
 }
 

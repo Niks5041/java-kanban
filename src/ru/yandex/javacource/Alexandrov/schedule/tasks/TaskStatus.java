@@ -1,4 +1,4 @@
-package ru.yandex.javacource.Alexandrov.schedule.tasks;
+package ru.yandex.javacource.alexandrov.schedule.tasks;
 
 public enum TaskStatus {
     NEW,
