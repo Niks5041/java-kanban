@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/ru/yandex/javacource/Alexandrov/schedule/manager/HistoryManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/ru/yandex/javacource/Alexandrov/schedule/manager/InMemoryHistoryManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/ru/yandex/javacource/Alexandrov/schedule/manager/InMemoryTaskManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/ru/yandex/javacource/Alexandrov/schedule/manager/Managers.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/ru/yandex/javacource/Alexandrov/schedule/manager/TaskManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/ru/yandex/javacource/Alexandrov/schedule/tasks/Epic.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/ru/yandex/javacource/Alexandrov/schedule/tasks/Node.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/ru/yandex/javacource/Alexandrov/schedule/tasks/Subtask.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/ru/yandex/javacource/Alexandrov/schedule/tasks/TaskStatus.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test/ru/yandex/javacource/alexandrov/schedule/manager/ManagerTest.java" charset="UTF-8" />
+  </component>
+</project>
