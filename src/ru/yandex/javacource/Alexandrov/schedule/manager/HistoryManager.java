@@ -1,9 +1,8 @@
 package ru.yandex.javacource.alexandrov.schedule.manager;
 
 import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
-import ru.yandex.javacource.alexandrov.schedule.tasks.Node;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface HistoryManager {
 
@@ -11,9 +10,5 @@ public interface HistoryManager {
 
     void remove(int id);
 
-    ArrayList<Task> getHistory();
-
-    void linkLast(Task task);
-
-    void removeNode(Node node);
+    List<Task> getHistory();
 }

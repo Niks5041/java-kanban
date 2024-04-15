@@ -33,13 +33,13 @@ public class InMemoryTaskManagerTest {
         assertNotNull(savedEpic , "Задача не найдена.");
         assertNotNull(savedSubtask, "Задача не найдена.");
 
-         final List<Task> tasks = taskManager.getAllTasks();
-         final List<Epic> epics = taskManager.getAllEpics();
-         final List<Subtask> subtasks = taskManager.getAllSubtasks();
+        final List<Task> tasks = taskManager.getAllTasks();
+        final List<Epic> epics = taskManager.getAllEpics();
+        final List<Subtask> subtasks = taskManager.getAllSubtasks();
 
-         assertEquals(task, tasks.get(0), "Задачи не совпадают.");
-         assertEquals(epic, epics.get(0), "Задачи не совпадают.");
-         assertEquals(subtask, subtasks.get(0), "Задачи не совпадают.");
+        assertEquals(task, tasks.get(0), "Задачи не совпадают.");
+        assertEquals(epic, epics.get(0), "Задачи не совпадают.");
+        assertEquals(subtask, subtasks.get(0), "Задачи не совпадают.");
     }
 
     @Test
@@ -64,7 +64,7 @@ public class InMemoryTaskManagerTest {
         assertEquals(savedTask.getId(),task.getId(), "Идентификаторы задач не совпадают.");
         assertEquals(savedTask.getStatus(),task.getStatus(), "Статусы задач не совпадают.");
 
-       assertTrue(savedTask == task, "Задачи не совпадают.");
+        assertTrue(savedTask == task, "Задачи не совпадают.");
     }
 
     @Test

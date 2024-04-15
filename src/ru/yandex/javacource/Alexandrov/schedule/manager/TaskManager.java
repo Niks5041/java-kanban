@@ -4,7 +4,6 @@ import ru.yandex.javacource.alexandrov.schedule.tasks.Epic;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Subtask;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
@@ -46,5 +45,5 @@ public interface TaskManager {
 
     void deleteSubtask(int id);
 
-    ArrayList<Task> getHistoryManager();
+    List<Task> getHistoryManager();
 }

@@ -7,11 +7,10 @@ import ru.yandex.javacource.alexandrov.schedule.tasks.Subtask;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
 import ru.yandex.javacource.alexandrov.schedule.tasks.TaskStatus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class InMemoryHistoryManagerTest {
 
@@ -44,7 +43,7 @@ public class InMemoryHistoryManagerTest {
         taskManager.updateEpics(epic2);
         taskManager.updateSubtasks(subtask2);
 
-        ArrayList<Task> taskHistory = historyManager.getHistory();
+        List<Task> taskHistory = historyManager.getHistory();
 
         assertEquals("Задача 1", taskHistory.get(0).getName(),
                 "Название первой версии задачи должно быть 'Задача 1'");
@@ -72,7 +71,7 @@ public class InMemoryHistoryManagerTest {
         historyManager.add(epic);
         historyManager.add(subtask);
 
-        ArrayList<Task> taskHistory = historyManager.getHistory();
+        List<Task> taskHistory = historyManager.getHistory();
 
         assertNotNull(taskHistory, "Задача не найдена.");
 
@@ -80,7 +79,7 @@ public class InMemoryHistoryManagerTest {
         historyManager.remove(epicId);
         historyManager.remove(subtaskId);
 
-        ArrayList<Task> taskHistoryEmpty = historyManager.getHistory();
+        List<Task> taskHistoryEmpty = historyManager.getHistory();
 
         assertNotNull(taskHistoryEmpty, "Задача найдена.");
     }

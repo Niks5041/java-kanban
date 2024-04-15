@@ -6,9 +6,9 @@ package ru.yandex.javacource.alexandrov.schedule.tasks;
     public Node<T> next;
     public Node<T> prev;
 
-     public Node(Node<T> prev, T task, Node<T> next) {
+     public Node(T task, Node<T> prev, Node<T> next) {
          this.task = task;
-         this.next = next;
          this.prev = prev;
+         this.next = next;
      }
  }
