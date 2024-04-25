@@ -1,6 +1,7 @@
 package ru.yandex.javacource.alexandrov.schedule.manager;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.javacource.alexandrov.schedule.exceptions.ManagerSaveException;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Epic;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Subtask;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
@@ -16,7 +17,7 @@ public class InMemoryTaskManagerTest {
 
 
     @Test
-    void addInMemoryTaskManagerDifferentTypes() {
+    void addInMemoryTaskManagerDifferentTypes() throws ManagerSaveException {
         Task task = new Task("Задача 1", "Test addNewTask description", TaskStatus.NEW);
         Epic epic = new Epic("Купить продукты", "Еда и напитки", TaskStatus.NEW);
 
@@ -43,7 +44,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void NotConflictTasks() {
+    void NotConflictTasks() throws ManagerSaveException {
         Task task = new Task("Test addNewTask", "Test addNewTask description", 3, TaskStatus.NEW);
         Task taskGenerate = new Task("Test addNewTask", "Test addNewTask description", TaskStatus.NEW);
 
@@ -53,7 +54,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void taskFieldsNotChange() {
+    void taskFieldsNotChange() throws ManagerSaveException {
         Task task = new Task("Test addNewTask", "Test addNewTask description", TaskStatus.NEW);
 
         final int taskGenId = taskManager.addNewTask(task);
@@ -68,7 +69,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addNewTask() {
+    void addNewTask() throws ManagerSaveException {
         Task task = new Task("Test addNewTask", "Test addNewTask description", TaskStatus.NEW);
 
         final int taskId = taskManager.addNewTask(task);
@@ -87,7 +88,7 @@ public class InMemoryTaskManagerTest {
 
 
     @Test
-    void hereditaryTaskEqualsIfTaskIdEquals() {
+    void hereditaryTaskEqualsIfTaskIdEquals() throws ManagerSaveException {
         Task epic = new Epic("Купить продукты", "Еда и Напитки", TaskStatus.NEW);
         Subtask subtask = new Subtask("Еда", "Макароны", TaskStatus.NEW,
                 epic.getId());
@@ -140,7 +141,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void testTaskFieldUpdate() {
+    public void testTaskFieldUpdate() throws ManagerSaveException {
         Task task = new Task("Test addNewTask", "Test addNewTask description", TaskStatus.NEW);
         taskManager.addNewTask(task);
 

@@ -1,5 +1,6 @@
 package ru.yandex.javacource.alexandrov.schedule.manager;
 
+import ru.yandex.javacource.alexandrov.schedule.exceptions.ManagerSaveException;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Epic;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Subtask;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
@@ -13,11 +14,11 @@ public interface TaskManager {
 
     List<Subtask> getAllSubtasks();
 
-    void deleteAllTasks();
+    void deleteAllTasks() throws ManagerSaveException;
 
-    void deleteAllEpics();
+    void deleteAllEpics() throws ManagerSaveException;
 
-    void deleteAllSubtasks();
+    void deleteAllSubtasks() throws ManagerSaveException;
 
     Task getTaskById(int taskId);
 
@@ -27,23 +28,23 @@ public interface TaskManager {
 
     List<Subtask> getSubtasksByEpicId(int epicId);
 
-    int addNewTask(Task task);
+    int addNewTask(Task task) throws ManagerSaveException;
 
-    int addNewEpic(Epic epic);
+    int addNewEpic(Epic epic) throws ManagerSaveException;
 
-    Integer addNewSubtask(Subtask subtask);
+    Integer addNewSubtask(Subtask subtask) throws ManagerSaveException;
 
-    void updateTasks(Task task);
+    void updateTasks(Task task) throws ManagerSaveException;
 
-    void updateEpics(Epic epic);
+    void updateEpics(Epic epic) throws ManagerSaveException;
 
-    void updateSubtasks(Subtask subtask);
+    void updateSubtasks(Subtask subtask) throws ManagerSaveException;
 
-    void deleteTaskById(int taskId);
+    void deleteTaskById(int taskId) throws ManagerSaveException;
 
-    void deleteEpicsById(int taskId);
+    void deleteEpicsById(int taskId) throws ManagerSaveException;
 
-    void deleteSubtask(int id);
+    void deleteSubtask(int id) throws ManagerSaveException;
 
     List<Task> getHistoryManager();
 }

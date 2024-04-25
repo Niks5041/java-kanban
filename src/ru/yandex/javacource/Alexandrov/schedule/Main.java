@@ -1,5 +1,6 @@
 package ru.yandex.javacource.alexandrov.schedule;
 
+import ru.yandex.javacource.alexandrov.schedule.exceptions.ManagerSaveException;
 import ru.yandex.javacource.alexandrov.schedule.manager.Managers;
 import ru.yandex.javacource.alexandrov.schedule.manager.TaskManager;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Subtask;
@@ -9,7 +10,7 @@ import ru.yandex.javacource.alexandrov.schedule.tasks.TaskStatus;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ManagerSaveException {
 
         TaskManager taskManager = Managers.getDefault();
 
