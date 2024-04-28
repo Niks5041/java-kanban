@@ -1,7 +1,6 @@
 package ru.yandex.javacource.alexandrov.schedule.manager;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.javacource.alexandrov.schedule.exceptions.ManagerSaveException;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Epic;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Subtask;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
@@ -15,9 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class InMemoryTaskManagerTest {
     TaskManager taskManager = Managers.getDefault();
 
-
     @Test
-    void addInMemoryTaskManagerDifferentTypes() throws ManagerSaveException {
+    void addInMemoryTaskManagerDifferentTypes() {
         Task task = new Task("Задача 1", "Test addNewTask description", TaskStatus.NEW);
         Epic epic = new Epic("Купить продукты", "Еда и напитки", TaskStatus.NEW);
 
@@ -44,7 +42,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void NotConflictTasks() throws ManagerSaveException {
+    void NotConflictTasks() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", 3, TaskStatus.NEW);
         Task taskGenerate = new Task("Test addNewTask", "Test addNewTask description", TaskStatus.NEW);
 
@@ -54,7 +52,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void taskFieldsNotChange() throws ManagerSaveException {
+    void taskFieldsNotChange() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", TaskStatus.NEW);
 
         final int taskGenId = taskManager.addNewTask(task);
@@ -69,7 +67,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addNewTask() throws ManagerSaveException {
+    void addNewTask() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", TaskStatus.NEW);
 
         final int taskId = taskManager.addNewTask(task);
@@ -86,9 +84,8 @@ public class InMemoryTaskManagerTest {
         assertEquals(task, tasks.get(0), "Задачи не совпадают.");
     }
 
-
     @Test
-    void hereditaryTaskEqualsIfTaskIdEquals() throws ManagerSaveException {
+    void hereditaryTaskEqualsIfTaskIdEquals() {
         Task epic = new Epic("Купить продукты", "Еда и Напитки", TaskStatus.NEW);
         Subtask subtask = new Subtask("Еда", "Макароны", TaskStatus.NEW,
                 epic.getId());
@@ -141,7 +138,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void testTaskFieldUpdate() throws ManagerSaveException {
+    public void testTaskFieldUpdate() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", TaskStatus.NEW);
         taskManager.addNewTask(task);
 
@@ -150,8 +147,5 @@ public class InMemoryTaskManagerTest {
         Task updatedTask = taskManager.getTaskById(task.getId());
         assertEquals("Обновили описание", updatedTask.getDescription());
     }
-
-
-
 }
 

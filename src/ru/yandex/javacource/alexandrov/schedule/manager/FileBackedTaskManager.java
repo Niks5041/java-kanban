@@ -11,8 +11,8 @@ import java.nio.file.Files;
 import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private static Task CSVTaskFormat;                 // почему именно так? не понимаю что с этим делать и тест не проходит
-    private final File file;                                   //а почему вы на File меняете, Я так понял, что Path выйгрышнее на сегодняшний день
+
+    private final File file;
     private static final String HEADER = "id,type,name,status,description,epic";
 
     public FileBackedTaskManager(File file) {
@@ -26,19 +26,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
                 final Task task = entry.getValue();
-                writer.write(CSVTaskFormat.toString(task));
+                writer.write(convertToString(task));
                 writer.newLine();
             }
 
             for (Map.Entry<Integer, Subtask> entry : subtasks.entrySet()) {
                 final Task task = entry.getValue();
-                writer.write(CSVTaskFormat.toString(task));
+                writer.write(convertToString(task));
                 writer.newLine();
             }
 
             for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
                 final Task task = entry.getValue();
-                writer.write(CSVTaskFormat.toString(task));
+                writer.write(convertToString(task));
                 writer.newLine();
             }
 
@@ -46,18 +46,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } catch (IOException e) {
             throw new ManagerSaveException("Can't save to file: " + file.getName(), e);
         }
-//        try (BufferedWriter bW = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8)) {
-//            bW.write("id,type,name,status,description,epic" + "\n");
-//            for (Task task : super.getAllTasks()) {
-//                String taskString = convertToString(task);
-//                bW.write(taskString + "\n");
-//            }                                                         я проверял в дебагере, у меня и тип и все остальное учитывалось, почему так плохо?
-                                                                       // а если пустой хэшмэп будет, ничего разве?
     }
 
     private String convertToString(Task task) {
-        return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + "," + task.getDescription() + "," + (task.getType().equals(TaskType.SUBTASK) ? task.getId() : ""); // У такси нет такого метода, только ранее получить объект сабтаски, но там громоздко получается опять же
-    } // я поэтому и намудрил тот код, чтобы получить епик айди у сабтаски
+        if (task.getType().equals(TaskType.SUBTASK)) {
+            Subtask subtask = (Subtask) task;
+            return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + // метода getEpicId нет у таски, так можно?
+                    "," + task.getDescription() + "," + subtask.getEpicId();
+        } else {
+            return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() +
+                    "," + task.getDescription();
+        }
+    }
 
     private static Task convertFromString(String value) {
         String[] split = value.split(",");
@@ -69,16 +69,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String description = split[4];
 
         if (type == TaskType.EPIC) {
-            return new Epic(name, description, taskStatus);
+            return new Epic(name, description, id, taskStatus);
         } else if (type == TaskType.SUBTASK) {
             int epicId = Integer.parseInt(split[5]);
-            return new Subtask(name, description, taskStatus, epicId);
+            return new Subtask(name, description, id, taskStatus, epicId);
         } else {
-            return new Task(name, description, taskStatus);
+            return new Task(name, description, id, taskStatus);
         }
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) {                          //а почему вы на File меняете, Я так понял, что Path выйгрышнее на сегодняшний день
+    public static FileBackedTaskManager loadFromFile(File file) {
         final FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
         try {
             final String csv = Files.readString(file.toPath());
@@ -94,7 +94,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 if (id > generatorId) {
                     generatorId = id;
                 }
-                taskManager.addNewTask(task);                     //вы хотите, чтоб я метод универсальный создал? taskManager.addAnyTask(task);
+                taskManager.addAnyTask(task);
             }
             for (Map.Entry<Integer, Subtask> e : taskManager.subtasks.entrySet()) {
                 final Subtask subtask = e.getValue();
@@ -106,6 +106,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             throw new ManagerSaveException("Can't read form file: " + file.getName(), e);
         }
         return taskManager;
+    }
+
+    protected void addAnyTask(Task task) {
+        final int id = task.getId();
+        switch (task.getType()) {
+            case TASK:
+                tasks.put(id, task);
+                break;
+            case SUBTASK:
+                subtasks.put(id, (Subtask) task);
+                break;
+            case EPIC:
+                epics.put(id, (Epic) task);
+                break;
+        }
     }
 
     @Override

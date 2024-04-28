@@ -2,7 +2,6 @@ package ru.yandex.javacource.alexandrov.schedule.manager;
 
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.javacource.alexandrov.schedule.exceptions.ManagerSaveException;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Epic;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Subtask;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
@@ -19,7 +18,7 @@ public class InMemoryHistoryManagerTest {
     HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Test
-    void taskNotChange() throws ManagerSaveException {
+    void taskNotChange() {
         Task task = new Task("Задача 1", "Test addNewTask description", TaskStatus.NEW);
         Epic epic = new Epic("Эпик 1", "Еда и напитки", TaskStatus.NEW);
 
@@ -55,7 +54,7 @@ public class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void checkAddAndRemoveHistory() throws ManagerSaveException {
+    void checkAddAndRemoveHistory() {
         Task task = new Task("Задача 1", "Test addNewTask description", TaskStatus.NEW);
         Epic epic = new Epic("Эпик 1", "Еда и напитки", TaskStatus.NEW);
 
