@@ -1,6 +1,6 @@
 package ru.yandex.javacource.alexandrov.schedule.tasks;
 
-public class Subtask extends Epic {
+public class Subtask extends Task {
     private int epicId;
 
     public Subtask(String name, String description, int taskId, TaskStatus status, int epicId) {
@@ -11,6 +11,10 @@ public class Subtask extends Epic {
     public Subtask(String name, String description, TaskStatus status, int epicId) {
         super(name, description, status);
         this.epicId = epicId;
+    }
+
+    public TaskType getType() {
+        return TaskType.SUBTASK;
     }
 
     public int getEpicId() {
