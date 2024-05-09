@@ -1,5 +1,7 @@
 package ru.yandex.javacource.alexandrov.schedule.tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -7,7 +9,9 @@ public class Task {
     private String description;
     private int taskId;
     private TaskStatus status;
-    public TaskType taskType;
+    private TaskType taskType;
+    private Duration duration;
+    private LocalDateTime startTime;
 
     public Task(String name, String description, int taskId, TaskStatus status) {
         this.name = name;
@@ -20,6 +24,35 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
+    }
+
+    public Task(String name, String description, int taskId, TaskStatus status, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.taskId = taskId;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Task(String name, String description, TaskStatus status, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
     public TaskType getType() {
@@ -78,5 +111,11 @@ public class Task {
                 ", taskId=" + taskId +
                 ", status=" + status +
                 '.';
+    }
+
+    public void setDuration(Duration duration1) {
+    }
+
+    public void setStartTime(LocalDateTime startTime2) {
     }
 }
