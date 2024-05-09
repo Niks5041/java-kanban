@@ -7,6 +7,7 @@ public class Task {
     private String description;
     private int taskId;
     private TaskStatus status;
+    public TaskType taskType;
 
     public Task(String name, String description, int taskId, TaskStatus status) {
         this.name = name;
@@ -19,6 +20,10 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
+    }
+
+    public TaskType getType() {
+        return TaskType.TASK;
     }
 
     public int getId() {
@@ -67,8 +72,7 @@ public class Task {
         return Objects.hash(name, description, taskId, status);
     }
 
-    @Override
-    public String toString() {
+    public String toString(Task task) {
         return  " " + name +
                 ", описание='" + description + '\'' +
                 ", taskId=" + taskId +

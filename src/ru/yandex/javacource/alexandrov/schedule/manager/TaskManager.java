@@ -7,6 +7,7 @@ import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
 import java.util.List;
 
 public interface TaskManager {
+
     List<Task> getAllTasks();
 
     List<Epic> getAllEpics();

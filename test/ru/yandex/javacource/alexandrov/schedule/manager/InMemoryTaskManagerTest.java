@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class InMemoryTaskManagerTest {
     TaskManager taskManager = Managers.getDefault();
 
-
     @Test
     void addInMemoryTaskManagerDifferentTypes() {
         Task task = new Task("Задача 1", "Test addNewTask description", TaskStatus.NEW);
@@ -85,7 +84,6 @@ public class InMemoryTaskManagerTest {
         assertEquals(task, tasks.get(0), "Задачи не совпадают.");
     }
 
-
     @Test
     void hereditaryTaskEqualsIfTaskIdEquals() {
         Task epic = new Epic("Купить продукты", "Еда и Напитки", TaskStatus.NEW);
@@ -149,8 +147,5 @@ public class InMemoryTaskManagerTest {
         Task updatedTask = taskManager.getTaskById(task.getId());
         assertEquals("Обновили описание", updatedTask.getDescription());
     }
-
-
-
 }
 
