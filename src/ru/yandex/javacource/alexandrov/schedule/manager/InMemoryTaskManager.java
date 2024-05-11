@@ -6,6 +6,7 @@ import ru.yandex.javacource.alexandrov.schedule.tasks.Subtask;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
 import ru.yandex.javacource.alexandrov.schedule.tasks.TaskStatus;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -15,35 +16,84 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected final Map<Integer, Subtask> subtasks = new HashMap<>();
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
-    protected Set<Task> prioritizedTasks = new HashSet<>();
+    protected Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
-    @Override
-    public Set<Task> getPrioritizedTasks() {
-        prioritizedTasks = new TreeSet<>((Task task1, Task task2) -> {
-            if (task1.getStartTime().isBefore(task2.getStartTime())) {
-                return 1;
-            } else if (task1.getStartTime().isAfter(task2.getStartTime())) {
-                return -1;
+    private void prioritize(Task task) {
+        if (task.getStartTime() == null) {
+            return;
+        }
+        final LocalDateTime startTime = task.getStartTime();
+        final LocalDateTime endTime = task.getEndTime();
+        for (Task t : prioritizedTasks) {                                         // а что лучше? for, как мы всегда делали или через стрим foreach
+            final LocalDateTime existStart = t.getStartTime();
+            final LocalDateTime existEnd = t.getEndTime();
+            if (!endTime.isAfter(existStart)) {
+                continue;
+            }
+            if (!existEnd.isAfter(startTime)) {
+                continue;
+            }
+
+            throw new TaskValidationException("Задача пересекаются с id=" + t.getId() + " c " + existStart + " по " + existEnd);
+        }
+
+        prioritizedTasks.add(task);
+    }
+
+    protected void updateEpic(int epicId) {        // это задел для дальнейшей работы, или заменить уже везде?
+        Epic epic = epics.get(epicId);
+        updateEpicStatuses(epicId);
+        updateEpicDuration(epic);
+    }
+
+    private void updateEpicDuration(Epic epic) {
+        List<Integer> subs = epic.getSubtaskIds();
+        if (subs.isEmpty()) {
+            epic.setDuration(Duration.ofMinutes(0L));
+            return;
+        }
+        LocalDateTime start = LocalDateTime.MAX;
+        LocalDateTime end = LocalDateTime.MIN;
+        long duration = 0L;
+        for (int id : subs) {
+            final Subtask subtask = subtasks.get(id);
+            final LocalDateTime startTime = subtask.getStartTime();
+            final LocalDateTime endTime = subtask.getEndTime();
+            if (startTime.isBefore(start)) {
+                start = startTime;
+            }
+            if (endTime.isAfter(end)) {
+                end = endTime;
+            }
+            duration += subtask.getDuration().toMinutes();
+        }
+        epic.setDuration(Duration.ofMinutes(0L));
+        epic.setStartTime(start);
+        epic.setEndTime(end);
+    }
+
+    private void updateEpicStatuses(int taskId) {
+        Epic epic = epics.get(taskId);
+        List<Subtask> subtasks = getSubtasksByEpicId(taskId);
+        subtasks.forEach(subtask -> {
+            if (subtasks == null || subtask.getStatus().equals(TaskStatus.NEW)) {
+                epic.setStatus(TaskStatus.NEW);
             } else {
-                return 0;
+                epic.setStatus(TaskStatus.IN_PROGRESS);
             }
         });
-        prioritizedTasks.addAll(tasks.values());
-        prioritizedTasks.addAll(epics.values());
-        prioritizedTasks.addAll(subtasks.values());
-        return prioritizedTasks;
+        subtasks.forEach(subtask1 -> {
+            if (subtask1.getStatus().equals(TaskStatus.DONE)) {
+                epic.setStatus(TaskStatus.DONE);
+            } else {
+                epic.setStatus(TaskStatus.IN_PROGRESS);
+            }
+        });
     }
 
     @Override
-    public boolean checkValidation(Task task) {
-        if (prioritizedTasks.isEmpty()) {
-            return false;
-        }
-        Optional<LocalDateTime> maxStartTime = prioritizedTasks.stream()
-                .map(Task::getStartTime)
-                .max(Comparator.comparing(taskStream -> taskStream));
-
-        return task.getEndTime().isAfter(maxStartTime.get());
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
     }
 
     @Override
@@ -115,37 +165,24 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addNewTask(Task task) {
-        boolean validation = tasks.values().stream()
-                .anyMatch(existingTask -> checkValidation(task));
-        if (validation) {
-            throw new TaskValidationException("Новая задача пересекается с существующими задачами");
-        }
         int id = ++generatorId;
         task.setTaskId(id);
         tasks.put(id, task);
-        return id;
+        prioritize(task);                                     // если я правильно понял вас, в таком случае стрим уместен тогда, по тз просят?
+        return id;                                         // для эпика и сабтаски данные метод мы не используем, если я верно понял
     }
 
     @Override
     public int addNewEpic(Epic epic) {
-        boolean validation = tasks.values().stream()
-                .anyMatch(existingTask -> checkValidation(epic));
-        if (validation) {
-            throw new TaskValidationException("Новая задача пересекается с существующими задачами");
-        }
         int id = ++generatorId;
         epic.setTaskId(id);
         epics.put(id, epic);
+        prioritize(epic);
         return id;
     }
 
     @Override
     public Integer addNewSubtask(Subtask subtask) {
-        boolean validation = tasks.values().stream()
-                .anyMatch(existingTask -> checkValidation(subtask));
-        if (validation) {
-            throw new TaskValidationException("Новая задача пересекается с существующими задачами");
-        }
         int epicId = subtask.getEpicId();
         Epic epic = epics.get(epicId);
         if (epic == null) {
@@ -156,6 +193,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.put(id, subtask);
         epic.addSubtaskId(subtask.getId());
         updateEpicStatuses(epicId);
+        prioritize(subtask);
         return id;
     }
 
@@ -222,25 +260,6 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(subtask.getEpicId());
         epic.removeSubtask(id);
         updateEpicStatuses(epic.getId());
-    }
-
-    private void updateEpicStatuses(int taskId) {
-        Epic epic = epics.get(taskId);
-        List<Subtask> subtasks = getSubtasksByEpicId(taskId);
-        subtasks.forEach(subtask -> {
-            if (subtasks == null || subtask.getStatus().equals(TaskStatus.NEW)) {
-                epic.setStatus(TaskStatus.NEW);
-            } else {
-                epic.setStatus(TaskStatus.IN_PROGRESS);
-            }
-        });
-        subtasks.forEach(subtask1 -> {
-            if (subtask1.getStatus().equals(TaskStatus.DONE)) {
-                epic.setStatus(TaskStatus.DONE);
-            } else {
-                epic.setStatus(TaskStatus.IN_PROGRESS);
-            }
-        });
     }
 
     @Override

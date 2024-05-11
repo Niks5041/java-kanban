@@ -1,7 +1,5 @@
 package ru.yandex.javacource.alexandrov.schedule.tasks;
 
-import ru.yandex.javacource.alexandrov.schedule.manager.InMemoryTaskManager;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,16 +27,9 @@ public class Epic extends Task {
         super(name, description, id, status, startTime, duration);
     }
 
-    @Override
-    public LocalDateTime getEndTime() {
-          InMemoryTaskManager taskManager = new InMemoryTaskManager();
-          LocalDateTime latestEndTime = getStartTime();
-          return subtaskIds.stream()
-                  .map(taskManager::getSubtaskById)
-                  .map(Subtask::getEndTime)
-                  .max(LocalDateTime::compareTo)
-                  .orElse(latestEndTime);
-      }
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
 
     @Override
     public TaskType getType() {

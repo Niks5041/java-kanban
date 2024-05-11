@@ -29,11 +29,6 @@ public class Subtask extends Task {
     }
 
     @Override
-    public LocalDateTime getEndTime() {
-        return getStartTime().plus(getDuration());
-    }
-
-    @Override
     public TaskType getType() {
         return TaskType.SUBTASK;
     }

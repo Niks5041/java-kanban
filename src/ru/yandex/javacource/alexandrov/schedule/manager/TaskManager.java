@@ -5,7 +5,6 @@ import ru.yandex.javacource.alexandrov.schedule.tasks.Subtask;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
 
 import java.util.List;
-import java.util.Set;
 
 public interface TaskManager {
 
@@ -49,7 +48,5 @@ public interface TaskManager {
 
     List<Task> getHistoryManager();
 
-    Set<Task> getPrioritizedTasks();
-
-    boolean checkValidation(Task task);
+    List<Task> getPrioritizedTasks();
 }

@@ -2,6 +2,10 @@ package ru.yandex.javacource.alexandrov.schedule.manager;
 
 import ru.yandex.javacource.alexandrov.schedule.exceptions.ManagerSaveException;
 import ru.yandex.javacource.alexandrov.schedule.tasks.*;
+import ru.yandex.javacource.alexandrov.schedule.tasks.Epic;
+import ru.yandex.javacource.alexandrov.schedule.tasks.Subtask;
+import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
+import ru.yandex.javacource.alexandrov.schedule.tasks.TaskStatus;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,7 +32,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             tasks.entrySet().forEach(entry -> {
                 final Task task = entry.getValue();
                 try {
-                    writer.write(convertToString(task));
+                    writer.write(convertToString(task));             // вернул для компилятора, как обойти не знаю
                     writer.newLine();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
