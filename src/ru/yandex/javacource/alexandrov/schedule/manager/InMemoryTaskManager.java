@@ -210,7 +210,7 @@ public class InMemoryTaskManager implements TaskManager {
         long duration = 0L;
         for (int id : subs) {
             final Subtask subtask = subtasks.get(id);
-            if (subtask.getStartTime() == null) {                                       //добавил проверку
+            if (subtask.getStartTime() == null) {
                 return;
             }
             final LocalDateTime startTime = subtask.getStartTime();

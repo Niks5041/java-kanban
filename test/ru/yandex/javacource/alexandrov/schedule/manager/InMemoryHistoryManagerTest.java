@@ -2,88 +2,79 @@ package ru.yandex.javacource.alexandrov.schedule.manager;
 
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.javacource.alexandrov.schedule.tasks.Epic;
-import ru.yandex.javacource.alexandrov.schedule.tasks.Subtask;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
 import ru.yandex.javacource.alexandrov.schedule.tasks.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class InMemoryHistoryManagerTest {
+       HistoryManager historyManager = Managers.getDefaultHistory();
 
-    TaskManager taskManager = Managers.getDefault();
-    HistoryManager historyManager = Managers.getDefaultHistory();
+        @Test
+        public void testAdd() {
+            Task task1 = new Task("Задача 1", "Описание 1",1, TaskStatus.NEW,
+                    LocalDateTime.of(2024, 1, 01, 00, 00), Duration.ofMinutes(10));
+            Task task2 = new Task("Задача 2", "Описание 2",2, TaskStatus.NEW,
+                    LocalDateTime.of(2024, 2, 01, 00, 00), Duration.ofMinutes(10));
 
-    @Test
-    void taskNotChange() {
-        Task task = new Task("Задача 1", "Test addNewTask description", TaskStatus.NEW);
-        Epic epic = new Epic("Эпик 1", "Еда и напитки", TaskStatus.NEW);
+            historyManager.add(task1);
+            historyManager.add(task2);
 
-        final int taskId = taskManager.addNewTask(task);
-        final int epicId = taskManager.addNewEpic(epic);
+            List<Task> history = historyManager.getHistory();
 
-        Subtask subtask = new Subtask("Сабтаска 1", "Макароны", TaskStatus.NEW,
-                epic.getId());
+            assertEquals(2, history.size());
+            assertEquals(task1, history.get(0));
+            assertEquals(task2, history.get(1));
+        }
 
-        final int subtaskId = taskManager.addNewTask(subtask);
-        historyManager.add(task);
-        historyManager.add(epic);
-        historyManager.add(subtask);
+        @Test
+        public void testDuplicateAdd() {
+            Task task1 = new Task("Задача 1", "Описание 1",1, TaskStatus.NEW,
+                    LocalDateTime.of(2024, 1, 01, 00, 00), Duration.ofMinutes(10));
 
+            historyManager.add(task1);
+            historyManager.add(task1);
 
+            List<Task> history = historyManager.getHistory();
 
-        Task task2 = new Task("Новая Задача 1", "Test addNewTask description", taskId, TaskStatus.NEW);
-        Epic epic2 = new Epic("Новый Эпик 2", "Новый эпик", epicId, TaskStatus.NEW);
-        Subtask subtask2 = new Subtask("Новая Сабтаска 2", "Новая сабтаска", subtaskId, TaskStatus.NEW,
-                epicId);
-        taskManager.updateTasks(task2);
-        taskManager.updateEpics(epic2);
-        taskManager.updateSubtasks(subtask2);
+            assertEquals(1, history.size());
+            assertEquals(task1, history.get(0));
+        }
 
-        List<Task> taskHistory = historyManager.getHistory();
+        @Test
+        public void testRemove() {
+            Task task1 = new Task("Задача 1", "Описание 1",1, TaskStatus.NEW,
+                    LocalDateTime.of(2024, 1, 01, 00, 00), Duration.ofMinutes(10));
+            Task task2 = new Task("Задача 2", "Описание 2",2, TaskStatus.NEW,
+                    LocalDateTime.of(2024, 2, 01, 00, 00), Duration.ofMinutes(10));
 
-        assertEquals("Задача 1", taskHistory.get(0).getName(),
-                "Название первой версии задачи должно быть 'Задача 1'");
-        assertEquals("Эпик 1", taskHistory.get(1).getName(),
-                "Название первой версии эпика должно быть 'Эпик 1'");
-        assertEquals("Сабтаска 1", taskHistory.get(2).getName(),
-                "Название первой версии задачи должно быть 'Сабтаска 1'");
+            historyManager.add(task1);
+            historyManager.add(task2);
+
+            historyManager.remove(1);
+
+            List<Task> history = historyManager.getHistory();
+
+            assertEquals(1, history.size());
+            assertEquals(task2, history.get(0));
+        }
+
+        @Test
+        public void testRemoveFromEmptyHistory() {
+
+            historyManager.remove(1);
+
+            List<Task> history = historyManager.getHistory();
+
+            assertEquals(0, history.size());
+        }
     }
 
-    @Test
-    void checkAddAndRemoveHistory() {
-        Task task = new Task("Задача 1", "Test addNewTask description", TaskStatus.NEW);
-        Epic epic = new Epic("Эпик 1", "Еда и напитки", TaskStatus.NEW);
 
-        final int taskId = taskManager.addNewTask(task);
-        final int epicId = taskManager.addNewEpic(epic);
-
-        Subtask subtask = new Subtask("Сабтаска 1", "Макароны", TaskStatus.NEW,
-                epic.getId());
-
-        final int subtaskId = taskManager.addNewTask(subtask);
-        historyManager.add(task);
-        historyManager.add(task);
-        historyManager.add(epic);
-        historyManager.add(epic);
-        historyManager.add(subtask);
-
-        List<Task> taskHistory = historyManager.getHistory();
-
-        assertNotNull(taskHistory, "Задача не найдена.");
-
-        historyManager.remove(taskId);
-        historyManager.remove(epicId);
-        historyManager.remove(subtaskId);
-
-        List<Task> taskHistoryEmpty = historyManager.getHistory();
-
-        assertNotNull(taskHistoryEmpty, "Задача найдена.");
-    }
-}
 
 
 
