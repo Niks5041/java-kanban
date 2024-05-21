@@ -24,12 +24,12 @@ public class InMemoryTaskManagerTest {
         final int epicId = taskManager.addNewEpic(epic);
         final Epic savedEpic = taskManager.getEpicById(epicId);
 
-        Subtask subtask = new Subtask("Еда", "Макароны",  TaskStatus.NEW, epicId);
+        Subtask subtask = new Subtask("Еда", "Макароны", TaskStatus.NEW, epicId);
         final int subtaskId = taskManager.addNewSubtask(subtask);
         final List<Subtask> savedSubtask = taskManager.getSubtasksByEpicId(epicId);
 
         assertNotNull(savedTask, "Задача не найдена.");
-        assertNotNull(savedEpic , "Задача не найдена.");
+        assertNotNull(savedEpic, "Задача не найдена.");
         assertNotNull(savedSubtask, "Задача не найдена.");
 
         final List<Task> tasks = taskManager.getAllTasks();
@@ -60,8 +60,8 @@ public class InMemoryTaskManagerTest {
 
         assertEquals(savedTask.getName(), task.getName(), "Имена Задач не совпадают.");
         assertEquals(savedTask.getDescription(), task.getDescription(), "Описания Задач не совпадают.");
-        assertEquals(savedTask.getId(),task.getId(), "Идентификаторы задач не совпадают.");
-        assertEquals(savedTask.getStatus(),task.getStatus(), "Статусы задач не совпадают.");
+        assertEquals(savedTask.getId(), task.getId(), "Идентификаторы задач не совпадают.");
+        assertEquals(savedTask.getStatus(), task.getStatus(), "Статусы задач не совпадают.");
 
         assertTrue(savedTask == task, "Задачи не совпадают.");
     }
@@ -120,7 +120,7 @@ public class InMemoryTaskManagerTest {
         Epic epic = new Epic("Купить продукты", "Еда и Напитки", TaskStatus.NEW);
         Subtask subtask = new Subtask("Еда", "Макароны", TaskStatus.NEW,
                 epic.getId());
-        Subtask subtask2 = new Subtask("Напитки", "Сок",  TaskStatus.NEW,
+        Subtask subtask2 = new Subtask("Напитки", "Сок", TaskStatus.NEW,
                 epic.getId());
 
         epic.addSubtaskId(subtask.getId());
@@ -134,7 +134,6 @@ public class InMemoryTaskManagerTest {
 
         assertEquals(1, epic.getSubtaskIds().size());
         assertTrue(epic.getSubtaskIds().contains(subtask2.getId()));
-
     }
 
     @Test
