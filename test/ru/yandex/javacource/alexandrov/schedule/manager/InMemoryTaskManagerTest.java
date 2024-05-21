@@ -1,17 +1,20 @@
 package ru.yandex.javacource.alexandrov.schedule.manager;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.javacource.alexandrov.schedule.exceptions.TaskValidationException;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Epic;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Subtask;
 import ru.yandex.javacource.alexandrov.schedule.tasks.Task;
 import ru.yandex.javacource.alexandrov.schedule.tasks.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InMemoryTaskManagerTest {
+public class InMemoryTaskManagerTest  {
     TaskManager taskManager = Managers.getDefault();
 
     @Test
@@ -146,5 +149,45 @@ public class InMemoryTaskManagerTest {
         Task updatedTask = taskManager.getTaskById(task.getId());
         assertEquals("Обновили описание", updatedTask.getDescription());
     }
+
+    @Test
+    public void testTaskIntersection() {
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 5, 12, 8, 0);
+        Task task1 = new Task("Задача 1", "Описание", TaskStatus.NEW, startTime1, Duration.ofMinutes(10));
+        taskManager.addNewTask(task1);
+
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 5, 12, 8, 01);
+
+        Task task2 = new Task("Задача 2", "Описание", TaskStatus.NEW, startTime2, Duration.ofMinutes(10));
+
+        assertThrows(TaskValidationException.class, () -> {
+            taskManager.addNewTask(task2);
+        });
+    }
+
+//    @Test
+//    public void testEpicStatusAndDuration() {
+//        Epic epic = new Epic("Купить продукты", "Еда и Напитки", TaskStatus.NEW);
+//        taskManager.addNewEpic(epic);
+//
+//        Subtask subtask = new Subtask("Еда", "Макароны", TaskStatus.NEW,
+//                epic.getId());
+//        taskManager.addNewSubtask(subtask);
+//
+//        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
+//
+//
+//
+//        subtask.setStatus(TaskStatus.DONE);
+//
+//
+//
+//       taskManager.deleteSubtask(subtask.getId());
+//
+//
+//
+//        assertEquals(TaskStatus.DONE, epic.getStatus());
+//    }
 }
+
 
