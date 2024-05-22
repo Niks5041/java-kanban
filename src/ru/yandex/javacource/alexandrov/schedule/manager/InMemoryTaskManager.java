@@ -183,7 +183,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteSubtask(int id) {
+    public void deleteSubtaskById(int id) {
         Subtask subtask = subtasks.remove(id);
         historyManager.remove(id);
         if (subtask == null) {

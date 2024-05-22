@@ -9,7 +9,7 @@ public class Managers {
     }
 
     public static TaskManager getDefault() {
-        return new InMemoryTaskManager();          // вернул, чтоб гит хаб прошел тесты
+        return new InMemoryTaskManager();
     }
 
     public static HistoryManager getDefaultHistory() {
