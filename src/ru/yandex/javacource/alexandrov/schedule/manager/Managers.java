@@ -4,12 +4,12 @@ import java.io.File;
 
 public class Managers {
 
-    public static TaskManager getDefaultNoTest() {
+    public static TaskManager getDefaultFileWork() {
         return new FileBackedTaskManager(new File("resources/task.csv"));
     }
 
     public static TaskManager getDefault() {
-        return new InMemoryTaskManager();          // вернул, чтоб гит хаб прошел тесты
+        return new InMemoryTaskManager();
     }
 
     public static HistoryManager getDefaultHistory() {

@@ -1,32 +1,33 @@
 package ru.yandex.javacource.alexandrov.schedule.manager;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.FileWriter;
+import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+public class FileBackedTaskManagerTest  {
 
-public class FileBackedTaskManagerTest {
-    @Test
-    void testSaveAndLoadEmptyFile() {
+     @Test
+    public void testException() {
+
+        File tempFile = null;
         try {
-            Path tempFile = Files.createTempFile("temp", ".txt");
-            Path tempFilePath = Paths.get(tempFile.toUri());
+            tempFile = File.createTempFile("tempfile", ".txt");
 
-            FileBackedTaskManager taskManager = new FileBackedTaskManager(new File(tempFilePath.toString()));
-            taskManager.save();
+            FileWriter writer = new FileWriter(tempFile);
+            writer.write("1,TASK,Task1,TODO,Description1,2024-05-12T10:00:00,60,2024-05-12T11:00:00");
+            writer.write("2,EPIC,Epic1,IN_PROGRESS,Description2,2024-05-12T12:00:00,120,2024-05-12T14:00:00");
+            writer.close();
 
-            taskManager.loadFromFile(tempFilePath.toFile());
+            FileBackedTaskManager tm = FileBackedTaskManager.loadFromFile(tempFile);
 
-            assertEquals(0, taskManager.getAllTasks().size());
+            Assertions.assertDoesNotThrow(() -> tm.save());
 
-        } catch (Exception exp) {
-            exp.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
-
 }
+

@@ -32,7 +32,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             tasks.entrySet().forEach(entry -> {
                 final Task task = entry.getValue();
                 try {
-                    writer.write(convertToString(task));             // вернул для компилятора, как обойти не знаю
+                    writer.write(convertToString(task));
                     writer.newLine();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -217,8 +217,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void deleteSubtask(int id)  {
-        super.deleteSubtask(id);
+    public void deleteSubtaskById(int id)  {
+        super.deleteSubtaskById(id);
         save();
     }
 }

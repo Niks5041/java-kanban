@@ -20,7 +20,7 @@ public class Task {
         this.status = status;
     }
 
-    public Task(String name, String description, TaskStatus status) { ///Тест конструктор
+    public Task(String name, String description, TaskStatus status) {
         this.name = name;
         this.description = description;
         this.status = status;
